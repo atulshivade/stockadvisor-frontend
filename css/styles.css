@@ -309,6 +309,7 @@ main {
     border-radius: var(--radius);
     border: 1px solid var(--border);
     padding: 1rem;
+    overflow: hidden;
 }
 
 .card-header {
@@ -467,6 +468,21 @@ main {
 
 .data-table tr { cursor: pointer; transition: background 0.15s; }
 .data-table tbody tr:hover { background: var(--bg-hover); }
+
+/* Table scroll wrapper for mobile */
+.table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar {
+    height: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 2px;
+}
 
 /* ============== Modals ============== */
 .modal-overlay {
@@ -680,6 +696,9 @@ main {
 .feedback-status.resolved { background: rgba(0,184,148,0.2); color: #00b894; }
 .feedback-status.closed { background: rgba(139,145,153,0.2); color: var(--text-muted); }
 
+/* ============== Utility Classes ============== */
+.hide-mobile { /* Shown by default, hidden on mobile */ }
+
 /* ============== Loading ============== */
 .loading { text-align: center; padding: 2rem; color: var(--text-muted); }
 
@@ -764,10 +783,217 @@ footer strong {
 }
 
 @media (max-width: 768px) {
-    .header-content { flex-wrap: wrap; padding: 0; }
-    .search-wrapper { order: 3; max-width: 100%; width: 100%; margin-top: 0.75rem; }
-    nav { order: 4; width: 100%; margin-top: 0.5rem; overflow-x: auto; }
-    .stats-grid { grid-template-columns: 1fr; }
-    main { padding: 0.75rem; }
+    /* Hide elements with .hide-mobile class */
+    .hide-mobile { display: none !important; }
+    
+    /* Header Mobile Layout */
+    header { padding: 0.5rem 1rem; }
+    
+    .header-content { 
+        flex-wrap: wrap; 
+        padding: 0;
+        gap: 0.5rem;
+    }
+    
+    .logo { font-size: 1.1rem; }
+    
+    /* Exchange selector compact */
+    .exchange-select {
+        padding: 0.4rem 0.6rem;
+        gap: 0.5rem;
+    }
+    .exchange-select select { font-size: 0.8rem; }
+    .currency-badge { font-size: 0.7rem; padding: 0.2rem 0.4rem; }
+    
+    /* User section */
+    .user-section { gap: 0.5rem; }
+    .feedback-btn { 
+        padding: 0.4rem 0.6rem; 
+        font-size: 0.7rem;
+    }
+    .user-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
+    
+    /* Search below header elements */
+    .search-wrapper { 
+        order: 3; 
+        max-width: 100%; 
+        width: 100%; 
+        margin-top: 0.5rem; 
+    }
+    .search-input { padding: 0.6rem 1rem 0.6rem 2.2rem; font-size: 0.85rem; }
+    
+    /* Navigation tabs - scrollable */
+    nav { 
+        order: 4; 
+        width: 100%; 
+        margin-top: 0.5rem; 
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    .nav-btn { 
+        padding: 0.4rem 0.75rem; 
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+    
+    /* Main content */
+    main { padding: 0.75rem; gap: 1rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-card { padding: 0.75rem; }
+    .stat-label { font-size: 0.7rem; }
+    .stat-value { font-size: 1.25rem; }
+    
+    /* Stock items - Mobile optimized */
+    .stock-item {
+        padding: 0.6rem 0.5rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .stock-info { 
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 0.5rem;
+    }
+    
+    .stock-logo { 
+        width: 32px; 
+        height: 32px; 
+        font-size: 0.9rem;
+    }
+    
+    .stock-symbol { font-size: 0.85rem; }
+    .stock-name { 
+        font-size: 0.7rem; 
+        max-width: 80px;
+    }
+    
+    .stock-price { 
+        text-align: right;
+    }
+    .price { font-size: 0.85rem; }
+    .change { font-size: 0.75rem; }
+    
+    /* Stock actions - Always visible on mobile, in a row */
+    .stock-actions {
+        opacity: 1;
+        margin-left: 0;
+        gap: 0.2rem;
+        flex-shrink: 0;
+    }
+    
+    .action-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 0.65rem;
+    }
+    
+    /* Cards */
+    .card { padding: 0.75rem; }
+    .card-header { margin-bottom: 0.5rem; padding-bottom: 0.5rem; }
+    .card-title { font-size: 0.85rem; }
+    
+    /* Tables on mobile */
+    .data-table th, .data-table td { 
+        padding: 0.5rem 0.35rem; 
+        font-size: 0.75rem; 
+    }
+    
+    /* Table scroll wrapper */
+    .table-scroll-wrapper {
+        overflow-x: auto;
+        margin: -0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .data-table {
+        min-width: 400px;
+    }
+    
+    /* Modals */
+    .modal { max-width: 95%; }
+    .modal-header, .modal-body, .modal-footer { padding: 1rem; }
+    
+    /* Auth */
+    .auth-card { padding: 1.5rem; margin: 1rem; }
+    .auth-header h1 { font-size: 1.5rem; }
+    
+    /* Footer */
+    footer { 
+        padding: 0.75rem 1rem; 
+        font-size: 0.75rem;
+    }
+}
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 480px) {
+    header { padding: 0.5rem; }
+    
+    .logo { font-size: 1rem; gap: 0.3rem; }
+    .logo svg { width: 20px; height: 20px; }
+    
+    .exchange-select {
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .feedback-btn { 
+        padding: 0.3rem 0.5rem; 
+        font-size: 0.65rem;
+        border-radius: 12px;
+    }
+    
+    .user-avatar { width: 28px; height: 28px; font-size: 0.75rem; }
+    
+    main { padding: 0.5rem; }
+    
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+    .stat-card { padding: 0.6rem; }
+    .stat-label { font-size: 0.65rem; }
+    .stat-value { font-size: 1.1rem; }
+    
+    /* Stock items even more compact */
+    .stock-item { padding: 0.5rem 0.25rem; }
+    .stock-logo { width: 28px; height: 28px; font-size: 0.8rem; }
+    .stock-symbol { font-size: 0.8rem; }
+    .stock-name { 
+        font-size: 0.65rem; 
+        max-width: 60px;
+    }
+    .price { font-size: 0.8rem; }
+    .change { font-size: 0.7rem; }
+    
+    .action-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+    }
+    
+    .nav-btn { 
+        padding: 0.35rem 0.6rem; 
+        font-size: 0.75rem;
+    }
+    
+    /* Table even more compact on small phones */
+    .data-table th, .data-table td {
+        padding: 0.4rem 0.25rem;
+        font-size: 0.7rem;
+    }
+    
+    .data-table {
+        min-width: 350px;
+    }
+    
+    /* Auth card */
+    .auth-card { 
+        padding: 1.25rem; 
+        margin: 0.5rem;
+    }
+    .auth-header h1 { font-size: 1.3rem; }
+    .auth-header p { font-size: 0.85rem; }
+    
+    .form-input { padding: 0.6rem 0.8rem; font-size: 0.85rem; }
+    .btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
 }
 

@@ -30,16 +30,17 @@ function renderMarketOverview(data) {
     }
     
     document.getElementById('marketTable').innerHTML = stocks.length ? `
+        <div class="table-scroll-wrapper">
         <table class="data-table">
-            <thead><tr><th>Stock</th><th>Price</th><th>Change</th><th>Volume</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Stock</th><th>Price</th><th>Change</th><th class="hide-mobile">Volume</th><th>Actions</th></tr></thead>
             <tbody>${stocks.map(s => `
                 <tr onclick="openStockModal('${s.symbol}')">
-                    <td><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:1.2rem">${s.logo || '📈'}</span><div><div style="font-weight:600">${s.symbol}</div><div style="color:var(--text-muted);font-size:0.75rem">${s.name?.substring(0, 20) || s.symbol}</div></div></div></td>
-                    <td style="font-family:var(--font-mono);font-weight:600">${currencySymbol}${(s.current_price || 0).toLocaleString()}</td>
+                    <td><div style="display:flex;align-items:center;gap:0.5rem"><span style="font-size:1rem">${s.logo || '📈'}</span><div><div style="font-weight:600">${s.symbol}</div><div style="color:var(--text-muted);font-size:0.7rem">${s.name?.substring(0, 15) || s.symbol}</div></div></div></td>
+                    <td style="font-family:var(--font-mono);font-weight:600;white-space:nowrap">${currencySymbol}${(s.current_price || 0).toLocaleString()}</td>
                     <td><span class="change ${(s.change_percent || 0) >= 0 ? 'positive' : 'negative'}">${(s.change_percent || 0) >= 0 ? '+' : ''}${(s.change_percent || 0).toFixed(2)}%</span></td>
-                    <td style="color:var(--text-muted)">${((s.volume || 0) / 1e6).toFixed(1)}M</td>
+                    <td class="hide-mobile" style="color:var(--text-muted)">${((s.volume || 0) / 1e6).toFixed(1)}M</td>
                     <td onclick="event.stopPropagation()">
-                        <div style="display:flex;gap:0.25rem">
+                        <div style="display:flex;gap:0.2rem">
                             <button class="action-btn" onclick="openPortfolioModal('${s.symbol}',${s.current_price || 0})" title="Add to Portfolio">+P</button>
                             <button class="action-btn" onclick="addToWatchlist('${s.symbol}')" title="Add to Watchlist">+W</button>
                             <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TradingView">TV</a>
@@ -48,6 +49,7 @@ function renderMarketOverview(data) {
                 </tr>
             `).join('')}</tbody>
         </table>
+        </div>
     ` : '<div class="empty-state">No market data</div>';
 }
 
@@ -68,26 +70,28 @@ function renderPortfolio(data) {
     
     const h = data.holdings || [];
     document.getElementById('portfolioTable').innerHTML = h.length ? `
+        <div class="table-scroll-wrapper">
         <table class="data-table">
-            <thead><tr><th>Stock</th><th>Shares</th><th>Avg Cost</th><th>Current</th><th>Value</th><th>Gain</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Stock</th><th>Qty</th><th class="hide-mobile">Avg</th><th>Price</th><th class="hide-mobile">Value</th><th>Gain</th><th>Act</th></tr></thead>
             <tbody>${h.map(s => `
                 <tr onclick="openStockModal('${s.symbol}')">
-                    <td><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:1.2rem">${s.logo || '📈'}</span><div><div style="font-weight:600">${s.symbol}</div><div style="color:var(--text-muted);font-size:0.75rem">${s.name?.substring(0, 15) || ''}</div></div></div></td>
+                    <td><div style="display:flex;align-items:center;gap:0.5rem"><span style="font-size:1rem">${s.logo || '📈'}</span><div><div style="font-weight:600">${s.symbol}</div></div></div></td>
                     <td style="font-family:var(--font-mono)">${s.quantity}</td>
-                    <td style="font-family:var(--font-mono)">${currencySymbol}${(s.average_cost || 0).toFixed(2)}</td>
-                    <td style="font-family:var(--font-mono)">${currencySymbol}${(s.current_price || 0).toFixed(2)}</td>
-                    <td style="font-family:var(--font-mono);font-weight:600">${currencySymbol}${(s.total_value || 0).toLocaleString()}</td>
-                    <td><span class="change ${(s.gain || 0) >= 0 ? 'positive' : 'negative'}">${(s.gain || 0) >= 0 ? '+' : ''}${currencySymbol}${(s.gain || 0).toFixed(2)} (${(s.gain_percent || 0).toFixed(1)}%)</span></td>
+                    <td class="hide-mobile" style="font-family:var(--font-mono)">${currencySymbol}${(s.average_cost || 0).toFixed(0)}</td>
+                    <td style="font-family:var(--font-mono)">${currencySymbol}${(s.current_price || 0).toFixed(0)}</td>
+                    <td class="hide-mobile" style="font-family:var(--font-mono);font-weight:600">${currencySymbol}${(s.total_value || 0).toLocaleString()}</td>
+                    <td><span class="change ${(s.gain || 0) >= 0 ? 'positive' : 'negative'}">${(s.gain_percent || 0).toFixed(1)}%</span></td>
                     <td onclick="event.stopPropagation()">
-                        <div style="display:flex;gap:0.25rem">
+                        <div style="display:flex;gap:0.2rem">
                             <button class="action-btn" onclick="openPortfolioModal('${s.symbol}',${s.current_price || 0},${s.quantity},${s.average_cost})" title="Edit">E</button>
                             <button class="action-btn remove" onclick="removeFromPortfolio('${s.symbol}')" title="Remove">X</button>
-                            <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TradingView">TV</a>
+                            <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TV">TV</a>
                         </div>
                     </td>
                 </tr>
             `).join('')}</tbody>
         </table>
+        </div>
     ` : '<div class="empty-state">No holdings in this exchange. Add stocks to your portfolio!</div>';
 }
 
@@ -113,49 +117,53 @@ function renderWatchlist(data) {
     `).join('') : '<div class="empty-state">No stocks in watchlist</div>';
     
     document.getElementById('watchlistTable').innerHTML = stocks.length ? `
+        <div class="table-scroll-wrapper">
         <table class="data-table">
-            <thead><tr><th>Stock</th><th>Price</th><th>Change</th><th>Day Range</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Stock</th><th>Price</th><th>Change</th><th class="hide-mobile">Range</th><th>Act</th></tr></thead>
             <tbody>${stocks.map(s => `
                 <tr onclick="openStockModal('${s.symbol}')">
-                    <td><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:1.2rem">${s.logo || '📈'}</span><div><div style="font-weight:600">${s.symbol}</div><div style="color:var(--text-muted);font-size:0.75rem">${s.name?.substring(0, 20) || ''}</div></div></div></td>
-                    <td style="font-family:var(--font-mono);font-weight:600">${currencySymbol}${(s.current_price || 0).toLocaleString()}</td>
+                    <td><div style="display:flex;align-items:center;gap:0.5rem"><span style="font-size:1rem">${s.logo || '📈'}</span><div><div style="font-weight:600">${s.symbol}</div></div></div></td>
+                    <td style="font-family:var(--font-mono);font-weight:600;white-space:nowrap">${currencySymbol}${(s.current_price || 0).toLocaleString()}</td>
                     <td><span class="change ${(s.change_percent || 0) >= 0 ? 'positive' : 'negative'}">${(s.change_percent || 0) >= 0 ? '+' : ''}${(s.change_percent || 0).toFixed(2)}%</span></td>
-                    <td style="color:var(--text-muted);font-size:0.85rem">${currencySymbol}${(s.day_low || 0).toFixed(2)} - ${currencySymbol}${(s.day_high || 0).toFixed(2)}</td>
+                    <td class="hide-mobile" style="color:var(--text-muted);font-size:0.8rem;white-space:nowrap">${currencySymbol}${(s.day_low || 0).toFixed(0)}-${currencySymbol}${(s.day_high || 0).toFixed(0)}</td>
                     <td onclick="event.stopPropagation()">
-                        <div style="display:flex;gap:0.25rem">
+                        <div style="display:flex;gap:0.2rem">
                             <button class="action-btn" onclick="openPortfolioModal('${s.symbol}',${s.current_price || 0})" title="Add to Portfolio">+P</button>
                             <button class="action-btn remove" onclick="removeFromWatchlist('${s.symbol}')" title="Remove">X</button>
-                            <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TradingView">TV</a>
+                            <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TV">TV</a>
                         </div>
                     </td>
                 </tr>
             `).join('')}</tbody>
         </table>
+        </div>
     ` : '<div class="empty-state">No stocks in watchlist</div>';
 }
 
 // Render AI Picks
 function renderAIPicks(data) {
     document.getElementById('aiPicksTable').innerHTML = data.length ? `
+        <div class="table-scroll-wrapper">
         <table class="data-table">
-            <thead><tr><th>Stock</th><th>Rating</th><th>Confidence</th><th>Target</th><th>Potential</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Stock</th><th>Rating</th><th class="hide-mobile">Conf</th><th>Target</th><th>Gain</th><th>Act</th></tr></thead>
             <tbody>${data.map(s => `
                 <tr onclick="openStockModal('${s.symbol}')">
-                    <td><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:1.2rem">📈</span><div><div style="font-weight:600">${s.symbol}</div><div style="color:var(--text-muted);font-size:0.75rem">${s.name?.substring(0, 20) || ''}</div></div></div></td>
-                    <td><span class="sentiment-badge ${(s.recommendation_type || '').replace('_', '-')}">${(s.recommendation_type || '').replace('_', ' ')}</span></td>
-                    <td><div style="display:flex;align-items:center;gap:0.5rem"><div style="width:60px;height:6px;background:var(--bg-hover);border-radius:3px;overflow:hidden"><div style="width:${((s.confidence_score || 0) * 100)}%;height:100%;background:var(--accent-gradient)"></div></div><span style="font-size:0.8rem">${((s.confidence_score || 0) * 100).toFixed(0)}%</span></div></td>
-                    <td style="font-family:var(--font-mono)">${currencySymbol}${(s.target_price || 0).toFixed(2)}</td>
+                    <td><div style="display:flex;align-items:center;gap:0.5rem"><span style="font-size:1rem">📈</span><div><div style="font-weight:600">${s.symbol}</div></div></div></td>
+                    <td><span class="sentiment-badge ${(s.recommendation_type || '').replace('_', '-')}" style="font-size:0.65rem;padding:0.2rem 0.4rem">${(s.recommendation_type || '').replace('_', ' ').substring(0, 6)}</span></td>
+                    <td class="hide-mobile"><span style="font-size:0.75rem">${((s.confidence_score || 0) * 100).toFixed(0)}%</span></td>
+                    <td style="font-family:var(--font-mono);white-space:nowrap">${currencySymbol}${(s.target_price || 0).toFixed(0)}</td>
                     <td><span class="change positive">+${(s.potential_return || 0).toFixed(1)}%</span></td>
                     <td onclick="event.stopPropagation()">
-                        <div style="display:flex;gap:0.25rem">
+                        <div style="display:flex;gap:0.2rem">
                             <button class="action-btn" onclick="openPortfolioModal('${s.symbol}',${s.current_price || 0})" title="Add to Portfolio">+P</button>
                             <button class="action-btn" onclick="addToWatchlist('${s.symbol}')" title="Add to Watchlist">+W</button>
-                            <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TradingView">TV</a>
+                            <a class="action-btn tv-link" href="${s.tradingview_url || `https://www.tradingview.com/symbols/${s.symbol}/`}" target="_blank" title="TV">TV</a>
                         </div>
                     </td>
                 </tr>
             `).join('')}</tbody>
         </table>
+        </div>
     ` : '<div class="empty-state">No recommendations at this time</div>';
 }
 
