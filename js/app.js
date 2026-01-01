@@ -5,6 +5,16 @@
 
 // Initialize App on DOM Load
 document.addEventListener('DOMContentLoaded', () => {
+    // Show banner if backend is not available (deployed without backend)
+    if (!BACKEND_AVAILABLE) {
+        const banner = document.getElementById('backendBanner');
+        if (banner) {
+            banner.style.display = 'block';
+            // Adjust auth container for banner
+            document.getElementById('authContainer').style.paddingTop = '60px';
+        }
+    }
+    
     document.getElementById('exchangeSelect').value = selectedExchange;
     updateCurrency();
     setupAuthListeners();

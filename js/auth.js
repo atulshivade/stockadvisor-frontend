@@ -3,6 +3,15 @@
  * Developed by Atul Shivade @2026
  */
 
+// Check if backend is available
+function checkBackendAvailable() {
+    if (!BACKEND_AVAILABLE) {
+        alert('⚠️ Backend Server Not Available\n\nThe app is deployed on Netlify but the backend server is running locally.\n\nTo test on mobile:\n1. Deploy backend to Render/Railway/Heroku\n2. Update BACKEND_URL in config.js\n\nFor now, please test on your local computer where the backend is running.');
+        return false;
+    }
+    return true;
+}
+
 // Show Auth Container
 function showAuth() {
     document.getElementById('authContainer').style.display = 'flex';
@@ -29,6 +38,12 @@ function toggleAuth() {
 
 // Check Authentication
 async function checkAuth() {
+    if (!BACKEND_AVAILABLE) {
+        token = null;
+        localStorage.removeItem('token');
+        showAuth();
+        return;
+    }
     try {
         const res = await fetch(`${API}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -46,6 +61,7 @@ async function checkAuth() {
 // Login Handler
 async function handleLogin(e) {
     e.preventDefault();
+    if (!checkBackendAvailable()) return;
     try {
         const res = await fetch(`${API}/auth/login`, {
             method: 'POST',
@@ -63,6 +79,7 @@ async function handleLogin(e) {
 // Register Handler
 async function handleRegister(e) {
     e.preventDefault();
+    if (!checkBackendAvailable()) return;
     try {
         const res = await fetch(`${API}/auth/register`, {
             method: 'POST',
@@ -84,6 +101,7 @@ async function handleRegister(e) {
 
 // SSO Login with OAuth popup
 function ssoLogin(provider) {
+    if (!checkBackendAvailable()) return;
     // Open OAuth popup directly - backend will redirect to demo login page
     const width = 500, height = 600;
     const left = (screen.width - width) / 2;
@@ -119,6 +137,7 @@ function logout() {
 
 // Guest Login with device/location info
 async function guestLogin() {
+    if (!checkBackendAvailable()) return;
     try {
         // Collect device information
         const deviceInfo = {

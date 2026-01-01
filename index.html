@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- Backend Unavailable Banner (shown on mobile/deployed environments) -->
+    <div id="backendBanner" style="display:none;background:linear-gradient(90deg,#ff6b35,#f7931e);color:#fff;padding:0.75rem 1rem;text-align:center;font-size:0.85rem;position:fixed;top:0;left:0;right:0;z-index:9999">
+        <strong>📱 Mobile Demo Mode:</strong> Backend server is running locally. Full functionality available on desktop only.
+        <button onclick="this.parentElement.style.display='none'" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;margin-left:1rem;vertical-align:middle">×</button>
+    </div>
+    
     <!-- Auth Container -->
     <div id="authContainer" class="auth-container">
         <div class="auth-card">
