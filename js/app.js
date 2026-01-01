@@ -253,6 +253,8 @@ function closeStockModal() {
 }
 
 // Alert Modal Functions
+let alertSearchTimeout = null;
+
 function openAlertModal() {
     document.getElementById('alertModal').classList.add('active');
     // Update currency labels
@@ -265,10 +267,66 @@ function openAlertModal() {
     document.getElementById('alertStopLoss').value = '';
     document.getElementById('alertTargetPrice').value = '';
     document.getElementById('alertRationale').value = '';
+    document.getElementById('alertSearchResults').innerHTML = '';
+    document.getElementById('alertSearchResults').classList.remove('active');
 }
 
 function closeAlertModal() {
     document.getElementById('alertModal').classList.remove('active');
+    document.getElementById('alertSearchResults').classList.remove('active');
+}
+
+// Search stocks for Alert modal
+async function searchAlertStock(query) {
+    const resultsDiv = document.getElementById('alertSearchResults');
+    
+    if (!query || query.length < 1) {
+        resultsDiv.innerHTML = '';
+        resultsDiv.classList.remove('active');
+        return;
+    }
+    
+    // Debounce
+    clearTimeout(alertSearchTimeout);
+    alertSearchTimeout = setTimeout(async () => {
+        try {
+            const results = await searchStocks(query);
+            if (results && results.length > 0) {
+                resultsDiv.innerHTML = results.slice(0, 8).map(r => `
+                    <div class="search-result-item" onclick="selectAlertStock('${r.symbol}', '${(r.name || '').replace(/'/g, "\\'")}')">
+                        <div class="stock-info">
+                            <span class="stock-symbol">${r.symbol}</span>
+                            <span class="stock-name">${r.name || ''}</span>
+                        </div>
+                        <span class="stock-exchange">${r.exchange || selectedExchange}</span>
+                    </div>
+                `).join('');
+                resultsDiv.classList.add('active');
+            } else {
+                resultsDiv.innerHTML = '<div class="search-result-item" style="color:var(--text-muted)">No results found</div>';
+                resultsDiv.classList.add('active');
+            }
+        } catch (e) {
+            console.error('Alert search error:', e);
+        }
+    }, 300);
+}
+
+// Select stock from Alert search results
+async function selectAlertStock(symbol, name) {
+    document.getElementById('alertSymbol').value = symbol;
+    document.getElementById('alertSearchResults').innerHTML = '';
+    document.getElementById('alertSearchResults').classList.remove('active');
+    
+    // Fetch current price and auto-fill
+    try {
+        const quote = await getStockQuote(symbol);
+        if (quote && quote.current_price) {
+            document.getElementById('alertEntryPrice').value = quote.current_price.toFixed(2);
+        }
+    } catch (e) {
+        console.error('Failed to fetch price:', e);
+    }
 }
 
 async function createAlert() {
