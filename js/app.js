@@ -100,6 +100,14 @@ function showTab(tab) {
     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
     document.getElementById(tab + 'Tab').style.display = 'block';
     
+    // Clear search on tab switch
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.value = '';
+        document.getElementById('searchResults').innerHTML = '';
+        document.getElementById('searchResults').classList.remove('active');
+    }
+    
     // Refresh data when switching tabs
     if (tab === 'markets') fetchMarket();
     else if (tab === 'portfolio') fetchPortfolioData();
@@ -156,13 +164,15 @@ function closePortfolioModal() {
 
 async function confirmAddPortfolio() {
     if (!pendingPortfolioSymbol) return;
+    const symbol = pendingPortfolioSymbol; // Save before closing modal
     const qty = parseInt(document.getElementById('portfolioQty').value) || 1;
     const price = parseFloat(document.getElementById('portfolioPrice').value) || 0;
+    const isEdit = document.getElementById('portfolioModalTitle').textContent.includes('Edit');
     try {
-        await addToPortfolio(pendingPortfolioSymbol, qty, price);
+        await addToPortfolio(symbol, qty, price);
         closePortfolioModal();
         fetchPortfolioData();
-        alert(`${pendingPortfolioSymbol} added to portfolio!`);
+        alert(`${symbol} ${isEdit ? 'updated in' : 'added to'} portfolio!`);
     } catch (e) { alert(e.message); }
 }
 

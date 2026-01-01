@@ -375,8 +375,10 @@ main {
 .stock-price { text-align: right; flex-shrink: 0; }
 .price { font-weight: 600; font-family: var(--font-mono); font-size: 0.9rem; }
 .change { font-size: 0.8rem; font-family: var(--font-mono); }
-.change.positive { color: var(--positive); }
-.change.negative { color: var(--negative); }
+.change.positive, .positive { color: var(--positive) !important; }
+.change.negative, .negative { color: var(--negative) !important; }
+.stat-value.positive { color: var(--positive) !important; }
+.stat-value.negative { color: var(--negative) !important; }
 
 /* ============== Stock Actions ============== */
 .stock-actions {

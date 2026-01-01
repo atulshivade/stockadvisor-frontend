@@ -132,6 +132,26 @@ function logout() {
     token = null;
     currentUser = null;
     localStorage.removeItem('token');
+    localStorage.removeItem('exchange');
+    
+    // Clear all forms
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('regFirstName').value = '';
+    document.getElementById('regLastName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+    
+    // Clear search box
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = '';
+    
+    // Show login form (not register)
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('authToggleText').textContent = 'New user?';
+    document.getElementById('authToggleLink').textContent = 'Create account';
+    
     showAuth();
 }
 
