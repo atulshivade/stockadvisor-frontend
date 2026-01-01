@@ -104,6 +104,7 @@ function showTab(tab) {
     if (tab === 'markets') fetchMarket();
     else if (tab === 'portfolio') fetchPortfolioData();
     else if (tab === 'watchlist') fetchWatchlistData();
+    else if (tab === 'alerts') fetchAlerts();
     else if (tab === 'aipicks') fetchAIPicks();
     else if (tab === 'feedback') fetchFeedback();
     else if (tab === 'admin') { fetchAdminStats(); fetchUsers(); fetchGuestSessions(); }
@@ -249,5 +250,84 @@ async function openStockModal(symbol) {
 
 function closeStockModal() {
     document.getElementById('stockModal').classList.remove('active');
+}
+
+// Alert Modal Functions
+function openAlertModal() {
+    document.getElementById('alertModal').classList.add('active');
+    // Update currency labels
+    document.getElementById('alertCurrencyLabel').textContent = currencySymbol;
+    document.getElementById('alertSLCurrencyLabel').textContent = currencySymbol;
+    document.getElementById('alertTargetCurrencyLabel').textContent = currencySymbol;
+    // Clear form
+    document.getElementById('alertSymbol').value = '';
+    document.getElementById('alertEntryPrice').value = '';
+    document.getElementById('alertStopLoss').value = '';
+    document.getElementById('alertTargetPrice').value = '';
+    document.getElementById('alertRationale').value = '';
+}
+
+function closeAlertModal() {
+    document.getElementById('alertModal').classList.remove('active');
+}
+
+async function createAlert() {
+    const symbol = document.getElementById('alertSymbol').value.trim().toUpperCase();
+    const entryPrice = parseFloat(document.getElementById('alertEntryPrice').value);
+    const stopLoss = parseFloat(document.getElementById('alertStopLoss').value);
+    const targetPrice = parseFloat(document.getElementById('alertTargetPrice').value);
+    const rationale = document.getElementById('alertRationale').value.trim();
+    
+    if (!symbol) {
+        alert('Please enter a stock symbol');
+        return;
+    }
+    if (!entryPrice || entryPrice <= 0) {
+        alert('Please enter a valid entry price');
+        return;
+    }
+    if (!stopLoss || stopLoss <= 0) {
+        alert('Please enter a valid stop loss price');
+        return;
+    }
+    if (!targetPrice || targetPrice <= 0) {
+        alert('Please enter a valid target price');
+        return;
+    }
+    if (stopLoss >= entryPrice) {
+        alert('Stop loss must be below entry price');
+        return;
+    }
+    if (targetPrice <= entryPrice) {
+        alert('Target price must be above entry price');
+        return;
+    }
+    
+    try {
+        await createAlertAPI({
+            symbol: symbol,
+            entry_price: entryPrice,
+            stop_loss: stopLoss,
+            target_price: targetPrice,
+            rationale: rationale || null,
+            exchange: selectedExchange
+        });
+        closeAlertModal();
+        fetchAlerts();
+        alert('Stock alert created successfully!');
+    } catch (e) {
+        alert('Failed to create alert: ' + e.message);
+    }
+}
+
+async function deleteAlert(alertId) {
+    if (!confirm('Are you sure you want to delete this alert?')) return;
+    
+    try {
+        await deleteAlertAPI(alertId);
+        fetchAlerts();
+    } catch (e) {
+        alert('Failed to delete alert: ' + e.message);
+    }
 }
 

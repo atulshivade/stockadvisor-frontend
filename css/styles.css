@@ -762,6 +762,194 @@ main {
 
 .tv-link-btn:hover { background: #1E88E5; transform: translateY(-1px); }
 
+/* ============== Stock Alert Cards ============== */
+.alert-cards {
+    display: grid;
+    gap: 1rem;
+}
+
+.alert-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    transition: all 0.2s;
+}
+
+.alert-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+}
+
+.alert-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.alert-card-symbol {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.alert-card-name {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.alert-card-ltp {
+    text-align: right;
+}
+
+.alert-card-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.alert-card-change {
+    font-size: 0.85rem;
+}
+
+.alert-price-bar {
+    position: relative;
+    height: 8px;
+    background: linear-gradient(90deg, #ef5350 0%, #ef5350 33%, #ffeb3b 33%, #ffeb3b 66%, #4caf50 66%, #4caf50 100%);
+    border-radius: 4px;
+    margin: 1rem 0 0.5rem;
+}
+
+.alert-price-marker {
+    position: absolute;
+    top: -6px;
+    width: 20px;
+    height: 20px;
+    background: #1e3a5f;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.alert-price-labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.alert-price-label {
+    text-align: center;
+}
+
+.alert-price-label span {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.alert-price-label strong {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.alert-rationale {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.5rem 0;
+}
+
+.alert-rationale:hover {
+    color: var(--text);
+}
+
+.alert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.alert-potential {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alert-potential-icon {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.alert-potential-text {
+    font-size: 0.85rem;
+}
+
+.alert-potential-value {
+    font-weight: 700;
+    color: var(--positive);
+}
+
+.alert-buy-btn {
+    background: var(--positive);
+    color: #000;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.alert-buy-btn:hover {
+    background: #2ed573;
+    transform: scale(1.02);
+}
+
+.alert-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.alert-delete-btn {
+    background: var(--negative);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.alert-delete-btn:hover {
+    opacity: 0.9;
+}
+
+.powered-by {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
 /* ============== Empty State ============== */
 .empty-state {
     text-align: center;
@@ -988,6 +1176,44 @@ footer strong {
     
     .stock-modal-footer .btn {
         width: 100%;
+    }
+    
+    /* Alert Cards - Mobile */
+    .alert-card { padding: 0.75rem; }
+    
+    .alert-card-header {
+        flex-direction: column;
+    }
+    
+    .alert-card-ltp {
+        text-align: left;
+        margin-top: 0.25rem;
+    }
+    
+    .alert-card-symbol { font-size: 1rem; }
+    .alert-card-price { font-size: 1rem; }
+    .alert-card-change { font-size: 0.75rem; }
+    
+    .alert-price-labels { font-size: 0.8rem; }
+    .alert-price-label strong { font-size: 0.8rem; }
+    .alert-price-label span { font-size: 0.65rem; }
+    
+    .alert-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .alert-potential { justify-content: center; }
+    
+    .alert-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .alert-buy-btn, .alert-delete-btn {
+        flex: 1;
+        text-align: center;
     }
     
     /* Auth */

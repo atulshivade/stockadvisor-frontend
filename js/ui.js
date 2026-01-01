@@ -247,6 +247,90 @@ function renderGuestSessions(data) {
     ` : '<div class="empty-state">No guest sessions yet</div>';
 }
 
+// Render Stock Alerts
+function renderAlerts(data) {
+    const alerts = data.alerts || [];
+    const container = document.getElementById('alertsList');
+    if (!container) return;
+    
+    if (!alerts.length) {
+        container.innerHTML = '<div class="empty-state">No stock alerts yet. Create your first alert to track entry, stop loss, and target prices!</div>';
+        return;
+    }
+    
+    container.innerHTML = `<div class="alert-cards">${alerts.map(a => {
+        const entryPrice = a.entry_price || 0;
+        const stopLoss = a.stop_loss || 0;
+        const targetPrice = a.target_price || 0;
+        const currentPrice = a.current_price || entryPrice;
+        const potentialReturn = a.potential_return || 0;
+        const changePercent = a.change_percent || 0;
+        
+        // Calculate marker position (0-100%)
+        const priceRange = targetPrice - stopLoss;
+        const markerPosition = priceRange > 0 ? Math.max(0, Math.min(100, ((currentPrice - stopLoss) / priceRange) * 100)) : 50;
+        
+        const changeClass = changePercent >= 0 ? 'positive' : 'negative';
+        const changeSign = changePercent >= 0 ? '+' : '';
+        
+        return `
+            <div class="alert-card">
+                <div class="alert-card-header">
+                    <div>
+                        <span class="powered-by">Powered by Trader Smith</span>
+                        <div class="alert-card-symbol">${a.symbol}</div>
+                        <div class="alert-card-name">${a.name || a.symbol}</div>
+                    </div>
+                    <div class="alert-card-ltp">
+                        <div style="font-size:0.75rem;color:var(--text-muted)">${new Date(a.created_at).toLocaleDateString()} ${new Date(a.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        <div class="alert-card-price">LTP: ${currencySymbol}${currentPrice.toLocaleString()}</div>
+                        <div class="alert-card-change ${changeClass}">(${changeSign}${changePercent.toFixed(2)}%)</div>
+                    </div>
+                </div>
+                
+                <div class="alert-price-bar">
+                    <div class="alert-price-marker" style="left:${markerPosition}%"></div>
+                </div>
+                
+                <div class="alert-price-labels">
+                    <div class="alert-price-label" style="text-align:left">
+                        <span>Stop Loss</span>
+                        <strong style="color:#ef5350">${currencySymbol}${stopLoss.toLocaleString()}</strong>
+                    </div>
+                    <div class="alert-price-label">
+                        <span>Entry Price</span>
+                        <strong>${currencySymbol}${entryPrice.toLocaleString()}</strong>
+                    </div>
+                    <div class="alert-price-label" style="text-align:right">
+                        <span>Target Price</span>
+                        <strong style="color:#4caf50">${currencySymbol}${targetPrice.toLocaleString()}</strong>
+                    </div>
+                </div>
+                
+                ${a.rationale ? `
+                <div class="alert-rationale" onclick="alert('${a.rationale.replace(/'/g, "\\'")}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    Click here to view rationale
+                </div>
+                ` : ''}
+                
+                <div class="alert-footer">
+                    <div class="alert-potential">
+                        <div class="alert-potential-icon">${currencySymbol.charAt(0)}</div>
+                        <div class="alert-potential-text">
+                            Potential from CMP: <span class="alert-potential-value">${potentialReturn >= 0 ? '+' : ''}${potentialReturn.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="alert-delete-btn" onclick="deleteAlert('${a.id}')">Delete</button>
+                        <button class="alert-buy-btn" onclick="openPortfolioModal('${a.symbol}', ${currentPrice})">BUY</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('')}</div>`;
+}
+
 // Render Users List
 function renderUsersList(data) {
     const users = data.users || [];

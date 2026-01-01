@@ -116,6 +116,7 @@
                     <button class="nav-btn active" data-tab="markets" onclick="showTab('markets')">Markets</button>
                     <button class="nav-btn" data-tab="portfolio" onclick="showTab('portfolio')">Portfolio</button>
                     <button class="nav-btn" data-tab="watchlist" onclick="showTab('watchlist')">Watchlist</button>
+                    <button class="nav-btn" data-tab="alerts" onclick="showTab('alerts')">Alerts</button>
                     <button class="nav-btn" data-tab="aipicks" onclick="showTab('aipicks')">AI Picks</button>
                     <button class="nav-btn" data-tab="feedback" onclick="showTab('feedback')" id="feedbackNavBtn" style="display:none">Feedback</button>
                     <button class="nav-btn" data-tab="admin" onclick="showTab('admin')" id="adminNavBtn" style="display:none">Admin</button>
@@ -209,6 +210,17 @@
                     <div class="card">
                         <div class="card-header"><h3 class="card-title">My Watchlist</h3></div>
                         <div id="watchlistTable"><div class="loading"><div class="spinner"></div>Loading watchlist...</div></div>
+                    </div>
+                </div>
+
+                <!-- Stock Alerts Tab -->
+                <div id="alertsTab" class="tab-content" style="display:none">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Stock Alerts</h3>
+                            <button class="btn btn-primary btn-small" onclick="openAlertModal()">+ New Alert</button>
+                        </div>
+                        <div id="alertsList"><div class="loading"><div class="spinner"></div>Loading alerts...</div></div>
                     </div>
                 </div>
 
@@ -332,6 +344,41 @@
                 <button class="modal-close" onclick="closeStockModal()">&times;</button>
             </div>
             <div class="modal-body" id="stockModalBody"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="alertModalTitle">Create Stock Alert</h3>
+                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Stock Symbol</label>
+                    <input type="text" class="form-input" id="alertSymbol" placeholder="e.g., RELIANCE, TCS" style="text-transform:uppercase">
+                </div>
+                <div class="form-group">
+                    <label>Entry Price (<span id="alertCurrencyLabel">₹</span>)</label>
+                    <input type="number" class="form-input" id="alertEntryPrice" step="0.01" min="0.01" placeholder="Current market price">
+                </div>
+                <div class="form-group">
+                    <label>Stop Loss (<span id="alertSLCurrencyLabel">₹</span>)</label>
+                    <input type="number" class="form-input" id="alertStopLoss" step="0.01" min="0.01" placeholder="Price to exit if falling">
+                </div>
+                <div class="form-group">
+                    <label>Target Price (<span id="alertTargetCurrencyLabel">₹</span>)</label>
+                    <input type="number" class="form-input" id="alertTargetPrice" step="0.01" min="0.01" placeholder="Expected price target">
+                </div>
+                <div class="form-group">
+                    <label>Rationale (Optional)</label>
+                    <textarea class="form-textarea" id="alertRationale" placeholder="Why this trade? Technical analysis, news, etc."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAlertModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createAlert()">Create Alert</button>
+            </div>
         </div>
     </div>
 

@@ -230,3 +230,35 @@ async function fetchGuestSessions() {
     }
 }
 
+// ========== Stock Alerts ==========
+async function fetchAlerts() {
+    try {
+        // Try to get all public alerts first (doesn't require auth)
+        const data = await api(`/alerts/all?exchange=${selectedExchange}`);
+        renderAlerts(data);
+    } catch (e) {
+        // Fallback to user's alerts if authenticated
+        try {
+            const data = await api(`/alerts?exchange=${selectedExchange}`);
+            renderAlerts(data);
+        } catch (e2) {
+            const container = document.getElementById('alertsList');
+            if (container) {
+                container.innerHTML = `<div class="empty-state">No alerts yet. Create your first stock alert!</div>`;
+            }
+        }
+    }
+}
+
+async function createAlertAPI(alertData) {
+    return await api('/alerts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(alertData)
+    });
+}
+
+async function deleteAlertAPI(alertId) {
+    return await api(`/alerts/${alertId}`, { method: 'DELETE' });
+}
+
