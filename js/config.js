@@ -4,20 +4,23 @@
  */
 
 // API Configuration - Auto-detect environment
-// For production: Set BACKEND_URL to your deployed backend URL
-const BACKEND_URL = 'https://stockadvisor-api.onrender.com/'; // Change this when backend is deployed
+// For production: Set BACKEND_URL to your deployed backend URL (NO trailing slash!)
+const BACKEND_URL = 'https://stockadvisor-api.onrender.com'; // NO trailing slash!
 
 // Check if we're running locally or deployed
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const isDeployed = window.location.hostname.includes('netlify.app') || window.location.hostname.includes('vercel.app');
 
+// Normalize BACKEND_URL (remove trailing slash if present)
+const normalizedBackendUrl = BACKEND_URL.replace(/\/+$/, '');
+
 // Use appropriate API URL
-const API = isDeployed && BACKEND_URL.includes('localhost') 
+const API = isDeployed && normalizedBackendUrl.includes('localhost') 
     ? null  // Backend not deployed yet
-    : `${BACKEND_URL}/api/v1`;
+    : `${normalizedBackendUrl}/api/v1`;
 
 // Flag to check if backend is available
-const BACKEND_AVAILABLE = !isDeployed || !BACKEND_URL.includes('localhost');
+const BACKEND_AVAILABLE = !isDeployed || !normalizedBackendUrl.includes('localhost');
 
 // Admin Configuration - HARDCODED
 const ADMIN_EMAIL = 'atul.shivade@gmail.com';
