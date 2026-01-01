@@ -506,7 +506,38 @@ main {
     max-width: 500px;
     max-height: 85vh;
     overflow-y: auto;
+    overflow-x: hidden;
     box-shadow: var(--shadow);
+}
+
+/* Stock Modal specific styles */
+.stock-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.stock-modal-price {
+    text-align: right;
+}
+
+.stock-modal-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.stock-modal-ai-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stock-modal-footer {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .modal-header {
@@ -912,9 +943,52 @@ footer strong {
         min-width: 400px;
     }
     
-    /* Modals */
-    .modal { max-width: 95%; }
-    .modal-header, .modal-body, .modal-footer { padding: 1rem; }
+    /* Modals - Mobile */
+    .modal { 
+        max-width: 95%; 
+        width: 95%;
+        margin: 0.5rem;
+    }
+    .modal-header, .modal-body, .modal-footer { padding: 0.75rem; }
+    
+    .stock-modal-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .stock-modal-header > div:first-child {
+        width: 100%;
+    }
+    
+    .stock-modal-price {
+        text-align: left !important;
+        width: 100%;
+    }
+    
+    .stock-modal-price > div:first-child {
+        font-size: 1.5rem !important;
+    }
+    
+    .stock-modal-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.4rem;
+    }
+    
+    .stock-modal-stats > div {
+        padding: 0.5rem !important;
+    }
+    
+    .stock-modal-ai-grid {
+        gap: 0.75rem;
+    }
+    
+    .stock-modal-footer {
+        flex-direction: column;
+    }
+    
+    .stock-modal-footer .btn {
+        width: 100%;
+    }
     
     /* Auth */
     .auth-card { padding: 1.5rem; margin: 1rem; }

@@ -178,67 +178,67 @@ async function openStockModal(symbol) {
         const tvUrl = data.tradingview_url || `https://www.tradingview.com/symbols/${symbol}/`;
         
         document.getElementById('stockModalBody').innerHTML = `
-            <div style="display:grid;gap:1rem">
-                <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:grid;gap:0.75rem">
+                <div class="stock-modal-header">
                     <div>
-                        <div style="font-size:1.5rem;font-weight:700">${data.name || symbol}</div>
-                        <div style="color:var(--text-muted)">${data.sector || ''} | ${data.exchange || selectedExchange}</div>
+                        <div style="font-size:1.25rem;font-weight:700">${data.name || symbol}</div>
+                        <div style="color:var(--text-muted);font-size:0.85rem">${data.sector || ''} | ${data.exchange || selectedExchange}</div>
                     </div>
-                    <div style="text-align:right">
-                        <div style="font-size:1.75rem;font-weight:700;font-family:var(--font-mono)">${currencySymbol}${(data.current_price || 0).toLocaleString()}</div>
-                        <div class="change ${(data.change_percent || 0) >= 0 ? 'positive' : 'negative'}" style="font-size:1rem">${(data.change_percent || 0) >= 0 ? '+' : ''}${(data.change_percent || 0).toFixed(2)}% (${currencySymbol}${(data.change || 0).toFixed(2)})</div>
+                    <div class="stock-modal-price">
+                        <div style="font-size:1.5rem;font-weight:700;font-family:var(--font-mono)">${currencySymbol}${(data.current_price || 0).toLocaleString()}</div>
+                        <div class="change ${(data.change_percent || 0) >= 0 ? 'positive' : 'negative'}" style="font-size:0.9rem">${(data.change_percent || 0) >= 0 ? '+' : ''}${(data.change_percent || 0).toFixed(2)}% (${currencySymbol}${Math.abs(data.change || 0).toFixed(2)})</div>
                     </div>
                 </div>
                 
-                <a href="${tvUrl}" target="_blank" class="tv-link-btn" style="align-self:flex-start">
+                <a href="${tvUrl}" target="_blank" class="tv-link-btn" style="width:100%">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                     Open in TradingView
                 </a>
                 
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem">
-                    <div style="padding:0.75rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.7rem;color:var(--text-muted)">Open</div><div style="font-weight:600;font-family:var(--font-mono)">${currencySymbol}${(data.open_price || 0).toFixed(2)}</div></div>
-                    <div style="padding:0.75rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.7rem;color:var(--text-muted)">High</div><div style="font-weight:600;font-family:var(--font-mono)">${currencySymbol}${(data.day_high || 0).toFixed(2)}</div></div>
-                    <div style="padding:0.75rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.7rem;color:var(--text-muted)">Low</div><div style="font-weight:600;font-family:var(--font-mono)">${currencySymbol}${(data.day_low || 0).toFixed(2)}</div></div>
-                    <div style="padding:0.75rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.7rem;color:var(--text-muted)">Volume</div><div style="font-weight:600;font-family:var(--font-mono)">${((data.volume || 0) / 1e6).toFixed(1)}M</div></div>
+                <div class="stock-modal-stats">
+                    <div style="padding:0.6rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.65rem;color:var(--text-muted)">Open</div><div style="font-weight:600;font-family:var(--font-mono);font-size:0.9rem">${currencySymbol}${(data.open_price || 0).toFixed(2)}</div></div>
+                    <div style="padding:0.6rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.65rem;color:var(--text-muted)">High</div><div style="font-weight:600;font-family:var(--font-mono);font-size:0.9rem">${currencySymbol}${(data.day_high || 0).toFixed(2)}</div></div>
+                    <div style="padding:0.6rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.65rem;color:var(--text-muted)">Low</div><div style="font-weight:600;font-family:var(--font-mono);font-size:0.9rem">${currencySymbol}${(data.day_low || 0).toFixed(2)}</div></div>
+                    <div style="padding:0.6rem;background:var(--bg-primary);border-radius:8px"><div style="font-size:0.65rem;color:var(--text-muted)">Vol</div><div style="font-weight:600;font-family:var(--font-mono);font-size:0.9rem">${((data.volume || 0) / 1e6).toFixed(1)}M</div></div>
                 </div>
                 
-                <div style="padding:1rem;background:var(--bg-primary);border-radius:8px">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-                        <h4 style="margin:0;display:flex;align-items:center;gap:0.5rem"><span class="ai-badge">AI ANALYSIS</span></h4>
+                <div style="padding:0.75rem;background:var(--bg-primary);border-radius:8px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem">
+                        <span class="ai-badge">AI ANALYSIS</span>
                         <span class="sentiment-badge ${sentimentClass}">${ai.overall_sentiment || 'NEUTRAL'}</span>
                     </div>
-                    <div style="margin-bottom:1rem">
-                        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.25rem">Confidence Score</div>
-                        <div style="display:flex;align-items:center;gap:0.75rem">
-                            <div style="flex:1;height:8px;background:var(--bg-hover);border-radius:4px;overflow:hidden">
+                    <div style="margin-bottom:0.75rem">
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.25rem">Confidence Score</div>
+                        <div style="display:flex;align-items:center;gap:0.5rem">
+                            <div style="flex:1;height:6px;background:var(--bg-hover);border-radius:3px;overflow:hidden">
                                 <div style="width:${ai.confidence_score || 50}%;height:100%;background:var(--accent-gradient)"></div>
                             </div>
-                            <span style="font-weight:600">${(ai.confidence_score || 50).toFixed(0)}%</span>
+                            <span style="font-weight:600;font-size:0.85rem">${(ai.confidence_score || 50).toFixed(0)}%</span>
                         </div>
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                    <div class="stock-modal-ai-grid">
                         <div>
-                            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.25rem">Short Term (${ai.short_term_outlook?.timeframe || '1-4 weeks'})</div>
+                            <div style="font-size:0.7rem;color:var(--text-muted)">Short Term (${ai.short_term_outlook?.timeframe || '1-4 weeks'})</div>
                             <div style="font-weight:600;color:${ai.short_term_outlook?.recommendation?.includes('BUY') ? 'var(--positive)' : ai.short_term_outlook?.recommendation?.includes('SELL') ? 'var(--negative)' : 'var(--warning)'}">${ai.short_term_outlook?.recommendation || 'HOLD'}</div>
-                            <div style="font-size:0.8rem;color:var(--text-muted)">Target: ${ai.short_term_outlook?.target_change > 0 ? '+' : ''}${ai.short_term_outlook?.target_change || 0}%</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted)">Target: ${ai.short_term_outlook?.target_change > 0 ? '+' : ''}${ai.short_term_outlook?.target_change || 0}%</div>
                         </div>
                         <div>
-                            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.25rem">Long Term (${ai.long_term_outlook?.timeframe || '6-12 months'})</div>
+                            <div style="font-size:0.7rem;color:var(--text-muted)">Long Term (${ai.long_term_outlook?.timeframe || '6-12 months'})</div>
                             <div style="font-weight:600;color:${ai.long_term_outlook?.recommendation?.includes('BUY') ? 'var(--positive)' : ai.long_term_outlook?.recommendation?.includes('SELL') ? 'var(--negative)' : 'var(--warning)'}">${ai.long_term_outlook?.recommendation || 'HOLD'}</div>
-                            <div style="font-size:0.8rem;color:var(--text-muted)">Target: ${ai.long_term_outlook?.target_change > 0 ? '+' : ''}${ai.long_term_outlook?.target_change || 0}%</div>
+                            <div style="font-size:0.75rem;color:var(--text-muted)">Target: ${ai.long_term_outlook?.target_change > 0 ? '+' : ''}${ai.long_term_outlook?.target_change || 0}%</div>
                         </div>
                     </div>
-                    <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-size:0.85rem">
-                        <div><span style="color:var(--text-muted)">Risk:</span> <span style="font-weight:500">${ai.risk_level || 'Medium'}</span></div>
-                        <div><span style="color:var(--text-muted)">Technical:</span> <span style="font-weight:500">${ai.technical_rating || 'Neutral'}</span></div>
+                    <div style="margin-top:0.75rem;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-size:0.8rem">
+                        <div><span style="color:var(--text-muted)">Risk:</span> <strong>${ai.risk_level || 'Medium'}</strong></div>
+                        <div><span style="color:var(--text-muted)">Technical:</span> <strong>${ai.technical_rating || 'Neutral'}</strong></div>
                     </div>
-                    ${ai.bullish_factors?.length ? `<div style="margin-top:1rem"><div style="font-size:0.75rem;color:var(--positive);margin-bottom:0.25rem">Bullish Factors</div><div style="font-size:0.85rem">${ai.bullish_factors.join(' • ')}</div></div>` : ''}
-                    ${ai.bearish_factors?.length ? `<div style="margin-top:0.5rem"><div style="font-size:0.75rem;color:var(--negative);margin-bottom:0.25rem">Bearish Factors</div><div style="font-size:0.85rem">${ai.bearish_factors.join(' • ')}</div></div>` : ''}
+                    ${ai.bullish_factors?.length ? `<div style="margin-top:0.75rem"><div style="font-size:0.7rem;color:var(--positive)">Bullish Factors</div><div style="font-size:0.8rem">${ai.bullish_factors.join(' • ')}</div></div>` : ''}
+                    ${ai.bearish_factors?.length ? `<div style="margin-top:0.5rem"><div style="font-size:0.7rem;color:var(--negative)">Bearish Factors</div><div style="font-size:0.8rem">${ai.bearish_factors.join(' • ')}</div></div>` : ''}
                 </div>
                 
-                <div style="display:flex;gap:0.75rem">
-                    <button class="btn btn-primary" style="flex:1" onclick="openPortfolioModal('${symbol}',${data.current_price || 0});closeStockModal()">Add to Portfolio</button>
-                    <button class="btn btn-secondary" style="flex:1" onclick="addToWatchlist('${symbol}');closeStockModal()">Add to Watchlist</button>
+                <div class="stock-modal-footer">
+                    <button class="btn btn-primary" onclick="openPortfolioModal('${symbol}',${data.current_price || 0});closeStockModal()">Add to Portfolio</button>
+                    <button class="btn btn-secondary" onclick="addToWatchlist('${symbol}');closeStockModal()">Add to Watchlist</button>
                 </div>
             </div>
         `;
