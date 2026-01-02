@@ -50,6 +50,7 @@ function initApp() {
         }
     }
     loadAllData();
+    startAutoRefresh(); // Start auto-refresh for live data
 }
 
 // Load All Data

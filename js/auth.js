@@ -134,6 +134,9 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('exchange');
     
+    // Stop auto-refresh
+    if (typeof stopAutoRefresh === 'function') stopAutoRefresh();
+    
     // Clear all forms
     document.getElementById('loginEmail').value = '';
     document.getElementById('loginPassword').value = '';
