@@ -57,6 +57,43 @@ function loadAllData() {
     Promise.all([fetchMarket(), fetchPortfolioData(), fetchWatchlistData(), fetchAIPicks()]);
 }
 
+// Auto-refresh interval for live data (30 seconds)
+let autoRefreshInterval = null;
+const AUTO_REFRESH_INTERVAL = 5000; // 30 seconds
+
+function startAutoRefresh() {
+    // Clear any existing interval
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+    
+    // Start auto-refresh
+    autoRefreshInterval = setInterval(() => {
+        // Only refresh if user is logged in and on a data tab
+        if (!token) return;
+        
+        const activeTab = document.querySelector('.nav-btn.active')?.dataset?.tab;
+        if (activeTab === 'markets') {
+            fetchMarket();
+            console.log('Auto-refreshed market data');
+        } else if (activeTab === 'portfolio') {
+            fetchPortfolioData();
+            console.log('Auto-refreshed portfolio data');
+        } else if (activeTab === 'watchlist') {
+            fetchWatchlistData();
+            console.log('Auto-refreshed watchlist data');
+        } else if (activeTab === 'alerts') {
+            fetchAlerts();
+            console.log('Auto-refreshed alerts data');
+        }
+    }, AUTO_REFRESH_INTERVAL);
+}
+
+function stopAutoRefresh() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+        autoRefreshInterval = null;
+    }
+}
+
 // Setup Event Listeners
 function setupEventListeners() {
     // Close dropdowns on outside click
